@@ -3,23 +3,26 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SampleGame.Model;
+// Reference for all Model objects
+using SpaceGame.Model;
 
-namespace SampleGame
+namespace SampleGame.Controller
 {
 	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
-	public class Game1 : Game
+	public class SpaceGame : Game
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
-		public Game1()
+		public SpaceGame()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 		}
-
+		        
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
 		/// This is where it can query for any required services and load any non-graphic
@@ -29,8 +32,9 @@ namespace SampleGame
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
-
 			base.Initialize();
+			player = new Player();
+			playerMoveSpeed = 8.0f;
 		}
 
 		/// <summary>
@@ -41,7 +45,10 @@ namespace SampleGame
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			// Load the player resources 
+			Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
 
+			player.Initialize(Content.Load<Texture2D>("Texture/player"), playerPosition);
 			//TODO: use this.Content to load your game content here 
 		}
 
@@ -52,8 +59,17 @@ namespace SampleGame
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			// For Mobile devices, this logic will close the Game when the Back button is pressed
-			// Exit() is obsolete on iOS
+		}
+		// For Mobile devices, this logic will close the Game when the Back button is pressed
+		// Exit() is obsolete on iOS// Keyboard states used to determine key presses
+		private KeyboardState currentKeyboardState;
+		private KeyboardState previousKeyboardState;
+		// Gamepad states used to determine button presses
+		private GamePadState currentGamePadState;
+		private GamePadState previousGamePadState;
+		// A movement speed for the player
+		private float playerMoveSpeed;
+	
 #if !__IOS__ && !__TVOS__
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
@@ -62,19 +78,23 @@ namespace SampleGame
 			// TODO: Add your update logic here
 
 			base.Update(gameTime);
-		}
+	}
 
-		/// <summary>
-		/// This is called when the game should draw itself.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		protected override void Draw(GameTime gameTime)
-		{
-			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+	/// <summary>
+	/// This is called when the game should draw itself.
+	/// </summary>
+	/// <param name="gameTime">Provides a snapshot of timing values.</param>
+	protected override void Draw(GameTime gameTime)
+	{
+		graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			//TODO: Add your drawing code here
-
-			base.Draw(gameTime);
-		}
+		//TODO: Add your drawing code here
+		// Start drawing 
+		spriteBatch.Begin();
+		// Draw the Player 
+		player.Draw(spriteBatch);
+		// Stop drawing 
+		spriteBatch.End();
+		base.Draw(gameTime);
 	}
 }

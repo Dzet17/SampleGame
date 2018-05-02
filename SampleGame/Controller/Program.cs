@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SampleGame.Controller;
+using SampleGame.Model;
 #if MONOMAC
 using MonoMac.AppKit;
 using MonoMac.Foundation;
@@ -11,7 +13,7 @@ using UIKit;
 #endif
 #endregion
 
-namespace SampleGame
+namespace SampleGame.Controller
 {
 #if __IOS__ || __TVOS__
     [Register("AppDelegate")]
@@ -80,5 +82,7 @@ namespace SampleGame
             return true;
         }
     }  
+
+
 #endif
 }
